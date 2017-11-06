@@ -23,3 +23,26 @@
 
 
 //global dependencies(or imports)
+const path = require('path');
+const plugin = require(path.join(__dirname, 'lib', 'plugin'));
+const worker = require(path.join(__dirname, 'lib', 'worker'));
+
+
+/**
+ * @name worker
+ * @description valid mongoose kue worker
+ * @type {Object}
+ * @since 0.1.0
+ * @version 0.1.0
+ */
+exports.plugin = plugin;
+
+
+/**
+ * @name worker
+ * @description valid mongoose kue worker
+ * @type {Object}
+ * @since 0.1.0
+ * @version 0.1.0
+ */
+exports.worker = worker;
