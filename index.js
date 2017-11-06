@@ -18,7 +18,7 @@
  * User.runInBackground({method: 'sendEmail' to: ['a@example.com']});
  *
  * //queue instance method to be runned in background
- * use.runInBackground({method:'sendEmail' to: ['a@example.com']});
+ * user.runInBackground({method:'sendEmail' to: ['a@example.com']});
  */
 
 
