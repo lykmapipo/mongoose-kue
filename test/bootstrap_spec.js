@@ -5,11 +5,33 @@ process.env.NODE_ENV = 'test';
 
 //dependencies
 const async = require('async');
+const kue = require('kue');
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
 //enable mongoose query debug(log)
 // mongoose.set('debug', true);
+
+const redis = kue.redis.createClientFactory({
+  redis: {}
+});
+
+
+/**
+ * @description clear redis database
+ */
+function cleanup(done) {
+  redis
+    .keys('q*', function (error, rows) {
+      if (error) {
+        done(error);
+      } else {
+        async.each(rows, function (row, next) {
+          redis.del(row, next);
+        }, done);
+      }
+    });
+}
 
 /**
  * @description wipe all mongoose model data and drop all indexes
@@ -39,6 +61,10 @@ function wipe(done) {
   });
 }
 
+before(function (done) {
+  cleanup(done);
+});
+
 //setup database
 before(function (done) {
   mongoose.connect('mongodb://localhost/mongoose-kue', {
@@ -49,4 +75,9 @@ before(function (done) {
 // restore initial environment
 after(function (done) {
   wipe(done);
+});
+
+
+after(function (done) {
+  cleanup(done);
 });

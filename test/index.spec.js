@@ -54,4 +54,44 @@ describe('mongoose-kue', function () {
 
   });
 
+  describe('static#runInBackground', function () {
+
+    before(function (done) {
+      worker.reset(done);
+    });
+
+    before(function () {
+      worker.start({ mongoose: mongoose });
+    });
+
+    it('should be able to queue and run function in background',
+      function (done) {
+
+        const options = {
+          method: 'sendEmail',
+          to: ['a@ex.com']
+        };
+
+        //listen to queue events
+        worker.queue.on('job complete', function (id, result) {
+          expect(id).to.exist;
+          expect(result).to.exist;
+          expect(result.to).to.exist;
+          expect(result.to).to.be.eql(options.to);
+          done();
+        }).on('job failed', function (error) {
+          done(new Error(error));
+        });
+
+        const job = Party.runInBackground(options);
+        expect(job).to.exist;
+
+      });
+
+    after(function (done) {
+      worker.stop(done);
+    });
+
+  });
+
 });
