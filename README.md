@@ -24,7 +24,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 //apply mongoose-kue plugin to mongoose
-mongoose.plugin(require('mongoose-kue').plugin);
+mongoose.plugin(require('mongoose-kue').plugin, <options>);
 
 
 //run schema instance method in background
