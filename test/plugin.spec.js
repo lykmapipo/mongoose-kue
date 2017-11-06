@@ -68,7 +68,7 @@ describe('mongoose-kue-plugin', function () {
   });
 
 
-  it('should queue static method to run in backgroung', function () {
+  it('should queue static method to run in background', function () {
     const job = Vendor.runInBackground({
       method: 'sendEmail',
       to: [
@@ -84,7 +84,7 @@ describe('mongoose-kue-plugin', function () {
 
   });
 
-  it('should queue instance method to run in backgroung', function () {
+  it('should queue instance method to run in background', function () {
     const vendor = new Vendor({});
     const job = vendor.runInBackground({
       method: 'sendEmail',
@@ -94,6 +94,7 @@ describe('mongoose-kue-plugin', function () {
     });
 
     expect(job.data.context).to.exist;
+    expect(job.data.context._id).to.exist;
     expect(job.data.context.model).to.exist;
     expect(job.data.context.model).to.be.equal('Vendor');
     expect(job.data.context.method).to.exist;
