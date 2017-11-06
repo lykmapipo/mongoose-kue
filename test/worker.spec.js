@@ -9,7 +9,7 @@ const Schema = mongoose.Schema;
 const worker = require(path.join(__dirname, '..', 'lib', 'worker'));
 let User;
 
-describe('mongoose kue worker', function () {
+describe('mongoose-kue-worker', function () {
 
   before(function () {
 
