@@ -23,15 +23,23 @@ $ npm install --save mongoose-kue
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+//load and register your schema
+...
+
+//ensure connection
+mongoose.connect(<url>);
+
 //apply mongoose-kue plugin to mongoose
 mongoose.plugin(require('mongoose-kue').plugin, <options>);
 
 
 //run schema instance method in background
-user.runInBackground({ method:'sendSMS', to:[ '255714000111'] });
+const job = 
+	user.runInBackground({ method:'sendSMS', to:[ '255714000111'] });
 
 //run schema static method in background
-User.runInBackground({ method:'sendEmail', to:[ 'a@example.com', 'b@example.com'] });
+const job = 
+	User.runInBackground({ method:'sendEmail', to:[ 'a@example.com', 'b@example.com'] });
 
 
 //in separate process start processing
@@ -67,9 +75,18 @@ mongoose.plugin(runInBackground, {
 
 ### Worker
 
+*Note!: I highly recommend to run this in separate process*
+
 ```js
+const mongoose = require('mongoose');
 const worker = require('mongoose-kue').worker;
 
+//load and register your schemas
+
+//ensure mongoose connection
+mongoose.connect(<url>);
+
+//start worker queue to process schema methods in background
 worker.start({
 	mongoose: mongoose,
 	name: 'mongoose',
