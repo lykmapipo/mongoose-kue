@@ -4,7 +4,7 @@
 [![Dependency Status](https://img.shields.io/david/lykmapipo/mongoose-kue.svg?style=flat)](https://david-dm.org/lykmapipo/mongoose-kue)
 [![npm version](https://badge.fury.io/js/mongoose-kue.svg)](https://badge.fury.io/js/mongoose-kue)
 
-mongoose plugin to mongoose schema methods in background.
+mongoose plugin to run mongoose schema methods in background.
 
 *Note!: It's highly advice to run worker(s) in separate process for better performance*
 
@@ -39,6 +39,57 @@ const worker = require('mongoose-kue').worker;
 worker.start(<options>);
 
 ```
+
+
+## Options
+
+### Plugin
+```js
+const runInBackground = require('mongoose-kue').plugin;
+
+mongoose.plugin(runInBackground, {
+	mongoose: mongoose,
+	name: 'mongoose',
+	prefix: 'q',
+	redis: {
+	    port: 1234,
+	    host: '10.0.50.20',
+	    auth: 'password',
+	    db: 3
+	}
+});
+```
+
+- `mongoose` - Valid instance of mongoose
+- `name` - Name of the worker queue to process background work,
+- All applicable [kue](https://github.com/Automattic/kue#redis-connection-settings) connection settngs
+
+
+### Worker
+
+```js
+const worker = require('mongoose-kue').worker;
+
+worker.start({
+	mongoose: mongoose,
+	name: 'mongoose',
+	concurrency: 10,
+	prefix: 'q',
+	redis: {
+	    port: 1234,
+	    host: '10.0.50.20',
+	    auth: 'password',
+	    db: 3
+	}
+});
+
+``` 
+
+- `mongoose` - Valid instance of mongoose
+- `name` - Name of the worker queue to process background work
+- `concurrency` - [Processing Concurrency](https://github.com/Automattic/kue#processing-concurrency). Default to 10
+- `timeout` - [Graceful shutdown delay](https://github.com/Automattic/kue#graceful-shutdown)
+- All applicable [kue](https://github.com/Automattic/kue#redis-connection-settings) connection settngs
 
 
 ## References
