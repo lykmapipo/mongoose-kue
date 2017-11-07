@@ -1,6 +1,6 @@
 {
   "name": "mongoose-kue",
-  "version": "0.4.0",
+  "version": "0.1.0",
   "description": "mongoose plugin to run mongoose schema methods in background",
   "keywords": [
     "mongoose",
