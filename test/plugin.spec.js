@@ -63,14 +63,10 @@ describe('mongoose-kue-plugin', function () {
   it('should be applied to schema', function () {
 
     //assert static
-    expect(Vendor.runInBackgroundQueue).to.exist;
-    expect(Vendor.runInBackgroundOptions).to.exist;
     expect(Vendor.runInBackground).to.exist;
 
     //assert instance
     const vendor = new Vendor({});
-    expect(vendor.runInBackgroundQueue).to.exist;
-    expect(vendor.runInBackgroundOptions).to.exist;
     expect(vendor.runInBackground).to.exist;
 
   });
