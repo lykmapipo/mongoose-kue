@@ -70,6 +70,8 @@ mongoose.plugin(runInBackground, {
 
 - `mongoose` - Valid instance of mongoose
 - `name` - Name of the worker queue to process background work,
+- `attempts` - [Failure Attempts](https://github.com/Automattic/kue#failure-attempts)
+- `backoff` - [Failure Backoff](https://github.com/Automattic/kue#failure-backoff)
 - All applicable [kue](https://github.com/Automattic/kue#redis-connection-settings) connection settngs
 
 

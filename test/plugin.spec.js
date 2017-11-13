@@ -22,6 +22,14 @@ describe('mongoose-kue-plugin', function () {
     return job;
   };
 
+  FakeQueue.prototype.attempts = function ( /*attempts*/ ) {
+    return this;
+  };
+
+  FakeQueue.prototype.backoff = function ( /*backoff*/ ) {
+    return this;
+  };
+
   FakeQueue.prototype.save = function () {
     return this;
   };

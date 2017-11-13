@@ -1,6 +1,6 @@
 {
   "name": "mongoose-kue",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "mongoose plugin to run mongoose schema methods in background",
   "keywords": [
     "mongoose",
@@ -31,12 +31,10 @@
     "url": "https://github.com/lykmapipo/mongoose-kue/issues"
   },
   "homepage": "https://github.com/lykmapipo/mongoose-kue",
-  "contributors": [
-    {
-      "name": "lykmapipo",
-      "github": "https://github.com/lykmapipo"
-    }
-  ],
+  "contributors": [{
+    "name": "lykmapipo",
+    "github": "https://github.com/lykmapipo"
+  }],
   "devDependencies": {
     "async": "^2.6.0",
     "chai": "^4.1.2",
@@ -48,7 +46,7 @@
     "grunt-mocha-test": "^0.13.3",
     "jshint-stylish": "^2.2.1",
     "mocha": "^4.0.1",
-    "mongoose": "^4.13.0"
+    "mongoose": "^4.13.2"
   },
   "dependencies": {
     "kue": "^0.11.6",
