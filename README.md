@@ -14,7 +14,7 @@ mongoose plugin to run mongoose schema methods in background.
 
 ## Install
 ```sh
-$ npm install --save mongoose-kue
+$ npm install --save mongoose kue mongoose-kue
 ```
 
 ## Usage

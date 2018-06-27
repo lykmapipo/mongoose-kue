@@ -1,8 +1,9 @@
 {
   "name": "mongoose-kue",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "mongoose plugin to run mongoose schema methods in background",
   "keywords": [
+    "lykmapipo",
     "mongoose",
     "mongoose-plugin",
     "kue",
@@ -46,11 +47,11 @@
     "grunt-contrib-watch": "^1.1.0",
     "grunt-mocha-test": "^0.13.3",
     "jshint-stylish": "^2.2.1",
+    "kue": "^0.11.6",
     "mocha": "^5.2.0",
-    "mongoose": "^5.1.6"
+    "mongoose": "^5.1.7"
   },
   "dependencies": {
-    "kue": "^0.11.6",
     "lodash": "^4.17.10"
   }
 }

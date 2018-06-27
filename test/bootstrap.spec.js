@@ -67,9 +67,7 @@ before(function (done) {
 
 //setup database
 before(function (done) {
-  mongoose.connect('mongodb://localhost/mongoose-kue', {
-    useMongoClient: true
-  }, done);
+  mongoose.connect('mongodb://localhost/mongoose-kue', done);
 });
 
 // restore initial environment
