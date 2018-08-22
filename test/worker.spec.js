@@ -1,13 +1,15 @@
 'use strict';
 
 
-//global dependencies(or import)
+/* dependencies */
 const path = require('path');
 const expect = require('chai').expect;
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const worker = require(path.join(__dirname, '..', 'lib', 'worker'));
 let User;
+
+/* @todo sinon spy */
 
 describe('mongoose-kue-worker', function () {
 
@@ -130,25 +132,9 @@ describe('mongoose-kue-worker', function () {
 
     });
 
-    it('should throw Missing mongoose Instance', function (done) {
-      //inject job
-      const job = { data: { context: { model: 'User', method: 'sendEmail' } } };
-
-      worker.process(job, function (error) {
-        expect(error).to.exist;
-        expect(error.message)
-          .to.equal('Missing mongoose Instance');
-        done();
-      });
-
-    });
-
     it('should throw Missing Model', function (done) {
       //inject job 
       const job = { data: { context: { model: 'Use', method: 'sendEmail' } } };
-
-      // inject mongoose instance for testing
-      worker.options.mongoose = mongoose;
 
       worker.process(job, function (error) {
         expect(error).to.exist;
@@ -162,9 +148,6 @@ describe('mongoose-kue-worker', function () {
     it('should throw Missing Schema Static Method', function (done) {
       //inject job
       const job = { data: { context: { model: 'User', method: 'sentEmail' } } };
-
-      // inject mongoose instance for testing
-      worker.options.mongoose = mongoose;
 
       worker.process(job, function (error) {
         expect(error).to.exist;
@@ -184,9 +167,6 @@ describe('mongoose-kue-worker', function () {
             to: ['a@ex.com']
           }
         };
-
-        // inject mongoose instance for testing
-        worker.options.mongoose = mongoose;
 
         worker.process(job, function (error, results) {
           expect(error).to.not.exist;
@@ -208,9 +188,6 @@ describe('mongoose-kue-worker', function () {
           }
         };
 
-        // inject mongoose instance for testing
-        worker.options.mongoose = mongoose;
-
         worker.process(job, function (error, results) {
           expect(error).to.not.exist;
           expect(results).to.not.exist;
@@ -230,9 +207,6 @@ describe('mongoose-kue-worker', function () {
           }
         }
       };
-
-      // inject mongoose instance for testing
-      worker.options.mongoose = mongoose;
 
       worker.process(job, function (error) {
         expect(error).to.exist;
@@ -260,9 +234,6 @@ describe('mongoose-kue-worker', function () {
           }
         };
 
-        // inject mongoose instance for testing
-        worker.options.mongoose = mongoose;
-
         worker.process(job, function (error, results) {
           expect(error).to.not.exist;
           expect(results).to.exist;
@@ -287,9 +258,6 @@ describe('mongoose-kue-worker', function () {
           }
         };
 
-        // inject mongoose instance for testing
-        worker.options.mongoose = mongoose;
-
         worker.process(job, function (error, results) {
           expect(error).to.not.exist;
           expect(results).to.not.exist;
@@ -303,7 +271,7 @@ describe('mongoose-kue-worker', function () {
     });
 
     after(function (done) {
-      User.remove(done);
+      User.deleteMany(done);
     });
 
   });

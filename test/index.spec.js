@@ -1,14 +1,16 @@
 'use strict';
 
 
-//global dependencies(or import)
+/* dependencies */
 const path = require('path');
 const expect = require('chai').expect;
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const plugin = require(path.join(__dirname, '..', 'index')).plugin;
-const worker = require(path.join(__dirname, '..', 'index')).worker;
+const { plugin, worker } = require(path.join(__dirname, '..', 'index'));
 let Party;
+
+/* @todo sinon spy */
+
 
 describe('mongoose-kue', function () {
 
@@ -61,7 +63,7 @@ describe('mongoose-kue', function () {
     });
 
     before(function () {
-      worker.start({ mongoose: mongoose });
+      worker.start();
     });
 
     it('should be able to queue and run function in background',
@@ -104,7 +106,7 @@ describe('mongoose-kue', function () {
     });
 
     before(function () {
-      worker.start({ mongoose: mongoose });
+      worker.start();
     });
 
     before(function (done) {

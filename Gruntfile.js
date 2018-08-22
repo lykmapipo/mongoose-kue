@@ -2,14 +2,13 @@
 
 module.exports = function (grunt) {
 
-  // add grunt tasks.
+  //grunt tasks.
   grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
   grunt.initConfig({
-    // Configure a mochaTest task
-    mochaTest: {
+    mochaTest: { //mocha
       test: {
         options: {
           reporter: 'spec',
@@ -18,7 +17,7 @@ module.exports = function (grunt) {
         src: ['test/**/*.js']
       }
     },
-    jshint: {
+    jshint: { //jshint
       options: {
         reporter: require('jshint-stylish'),
         jshintrc: '.jshintrc'
@@ -30,7 +29,7 @@ module.exports = function (grunt) {
         'test/**/*.js'
       ]
     },
-    watch: {
+    watch: { //watch
       all: {
         files: [
           'Gruntfile.js',

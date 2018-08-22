@@ -1,13 +1,15 @@
 'use strict';
 
 
-//global dependencies(or import)
+/* dependencies */
 const path = require('path');
 const expect = require('chai').expect;
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const plugin = require(path.join(__dirname, '..', 'lib', 'plugin'));
 let Vendor;
+
+/* @todo sinon spy */
 
 describe('mongoose-kue-plugin', function () {
 

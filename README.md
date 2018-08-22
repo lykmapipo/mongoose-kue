@@ -10,7 +10,7 @@ mongoose plugin to run mongoose schema methods in background.
 
 ## Requirements
 
-- NodeJS v6.5+
+- NodeJS v10.0+
 
 ## Install
 ```sh
@@ -19,32 +19,53 @@ $ npm install --save mongoose kue mongoose-kue
 
 ## Usage
 
-```javascript
+```js
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
+const { plugin: runInBackground, worker } = require('mongoose-kue');
 
-//load and register your schema
+
+/* define schema */
+const UserSchema = new Schema({});
+
+User.statics.sendEmail = function sendEmail(options, done) {
+  done(null, options);
+};
+
+User.methods.sendEmail = function (options, done) {
+  done(null, options);
+};
+
+/* apply mongoose-kue plugin */
+UserSchema.plugin(runInBackground);
+
+/* register model */
+const User = mongoose.model('User', UserSchema);
+
 ...
 
-//ensure connection
-mongoose.connect(<url>);
+/* ensure mongoose connection */
+mongoose.connect(`<url>`);
 
-//apply mongoose-kue plugin to mongoose
-mongoose.plugin(require('mongoose-kue').plugin, <options>);
+/* queue sendEmail instance method to run in background */
+const job =
+  user.runInBackground({ method: 'sendSMS', to: ['255714000111'] });
+
+/* queue sendEmail static method in background */
+const job =
+  User.runInBackground({
+    method: 'sendEmail',
+    to: ['a@example.com',
+      'b@example.com'
+    ]
+  });
 
 
-//run schema instance method in background
-const job = 
-	user.runInBackground({ method:'sendSMS', to:[ '255714000111'] });
+/* ADVICED: in separate process start processing */
+worker.start();
 
-//run schema static method in background
-const job = 
-	User.runInBackground({ method:'sendEmail', to:[ 'a@example.com', 'b@example.com'] });
+...
 
-
-//in separate process start processing
-const worker = require('mongoose-kue').worker;
-worker.start(<options>);
 
 ```
 
@@ -53,22 +74,23 @@ worker.start(<options>);
 
 ### Plugin
 ```js
-const runInBackground = require('mongoose-kue').plugin;
+const { plugin: runInBackground } = require('mongoose-kue');
 
 mongoose.plugin(runInBackground, {
-	mongoose: mongoose,
-	name: 'mongoose',
-	prefix: 'q',
-	redis: {
-	    port: 1234,
-	    host: '10.0.50.20',
-	    auth: 'password',
-	    db: 3
-	}
+  name: 'mongoose',
+  prefix: 'q',
+  redis: (process.env.REDIS_URL || {
+    port: 1234,
+    host: '10.0.50.20',
+    auth: 'password',
+    db: 3
+  })
 });
+
+...
+
 ```
 
-- `mongoose` - Valid instance of mongoose
 - `name` - Name of the worker queue to process background work,
 - `attempts` - [Failure Attempts](https://github.com/Automattic/kue#failure-attempts)
 - `backoff` - [Failure Backoff](https://github.com/Automattic/kue#failure-backoff)
@@ -81,27 +103,28 @@ mongoose.plugin(runInBackground, {
 
 ```js
 const mongoose = require('mongoose');
-const worker = require('mongoose-kue').worker;
+const { worker } = require('mongoose-kue');
 
-//load and register your schemas
+/* load and register your models */
 
-//ensure mongoose connection
-mongoose.connect(<url>);
+...
 
-//start worker queue to process schema methods in background
+
+/* ensure mongoose connection */
+mongoose.connect(`<url>`);
+
+/* start worker queue to process in background */
 worker.start({
-	mongoose: mongoose,
-	name: 'mongoose',
-	concurrency: 10,
-	prefix: 'q',
-	redis: {
-	    port: 1234,
-	    host: '10.0.50.20',
-	    auth: 'password',
-	    db: 3
-	}
+  name: 'mongoose',
+  concurrency: 10,
+  prefix: 'q',
+  redis: (process.env.REDIS_URL || {
+    port: 1234,
+    host: '10.0.50.20',
+    auth: 'password',
+    db: 3
+  })
 });
-
 ``` 
 
 - `mongoose` - Valid instance of mongoose
