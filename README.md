@@ -55,9 +55,7 @@ const job =
 const job =
   User.runInBackground({
     method: 'sendEmail',
-    to: ['a@example.com',
-      'b@example.com'
-    ]
+    to: ['a@example.com', 'b@example.com']
   });
 
 

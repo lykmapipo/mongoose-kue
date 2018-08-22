@@ -37,6 +37,10 @@ describe('mongoose-kue-plugin', function () {
     return this;
   };
 
+  FakeQueue.prototype.removeOnComplete = function () {
+    return this;
+  };
+
   FakeQueue.shutdown = function (timeout, done) {
     return done();
   };

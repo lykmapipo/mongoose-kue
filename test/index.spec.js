@@ -84,6 +84,10 @@ describe('mongoose-kue', function () {
           expect(result).to.exist;
           expect(result.to).to.exist;
           expect(result.to).to.be.eql(options.to);
+          // done();
+        }).on('job remove', function (jobId, jobType) {
+          expect(jobId).to.exist;
+          expect(jobType).to.exist;
           done();
         }).on('job failed', function (error) {
           done(new Error(error));
