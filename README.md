@@ -127,7 +127,6 @@ worker.start({
 });
 ``` 
 
-- `mongoose` - Valid instance of mongoose
 - `name` - Name of the worker queue to process background work
 - `concurrency` - [Processing Concurrency](https://github.com/Automattic/kue#processing-concurrency). Default to 10
 - `timeout` - [Graceful shutdown delay](https://github.com/Automattic/kue#graceful-shutdown)
