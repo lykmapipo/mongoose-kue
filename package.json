@@ -12,7 +12,8 @@
     "later",
     "queue",
     "methods",
-    "functions"
+    "functions",
+    "jobs"
   ],
   "main": "index.js",
   "scripts": {
