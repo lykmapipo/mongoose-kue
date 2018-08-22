@@ -7,6 +7,7 @@ const expect = require('chai').expect;
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const plugin = require(path.join(__dirname, '..', 'lib', 'plugin'));
+const worker = require(path.join(__dirname, '..', 'lib', 'worker'));
 let Vendor;
 
 /* @todo sinon spy */
@@ -36,9 +37,15 @@ describe('mongoose-kue-plugin', function () {
     return this;
   };
 
-  before(function () {
+  FakeQueue.shutdown = function (timeout, done) {
+    return done();
+  };
 
-    mongoose.plugin(plugin, { name: 'mongoose', queue: FakeQueue });
+  before(function (done) {
+    worker.reset(done);
+  });
+
+  before(function () {
 
     let VendorSchema = new Schema({});
 
@@ -57,6 +64,8 @@ describe('mongoose-kue-plugin', function () {
     VendorSchema.methods.sendDirectEmail = function (done) {
       done();
     };
+
+    VendorSchema.plugin(plugin, { name: 'mongoose', queue: FakeQueue });
 
     Vendor = mongoose.model('Vendor', VendorSchema);
 
@@ -106,6 +115,10 @@ describe('mongoose-kue-plugin', function () {
     expect(job.data.context.method).to.exist;
     expect(job.data.context.method).to.be.equal('sendEmail');
 
+  });
+
+  after(function (done) {
+    worker.stop(done);
   });
 
 });

@@ -14,9 +14,11 @@ let Party;
 
 describe('mongoose-kue', function () {
 
-  before(function () {
+  before(function (done) {
+    worker.reset(done);
+  });
 
-    mongoose.plugin(plugin);
+  before(function () {
 
     let PartySchema = new Schema({});
 
@@ -35,6 +37,8 @@ describe('mongoose-kue', function () {
     PartySchema.methods.sendDirectEmail = function (done) {
       done();
     };
+
+    PartySchema.plugin(plugin);
 
     Party = mongoose.model('Party', PartySchema);
 
@@ -146,6 +150,14 @@ describe('mongoose-kue', function () {
       worker.stop(done);
     });
 
+  });
+
+  after(function (done) {
+    worker.stop(done);
+  });
+
+  after(function (done) {
+    Party.deleteMany(done);
   });
 
 });
