@@ -88,15 +88,12 @@ const { worker } = require('mongoose-kue');
 
 ...
 
-
-/* ensure mongoose connection */
-mongoose.connect(`<url>`);
-
 /* start worker queue to process in background */
 worker.start({
   name: 'mongoose',
   concurrency: 10,
   prefix: 'q',
+  MONGODB_URI: process.env.MONGODB_URI,
   redis: (process.env.REDIS_URL || {
     port: 1234,
     host: '10.0.50.20',
