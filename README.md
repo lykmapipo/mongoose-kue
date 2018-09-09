@@ -24,25 +24,8 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const { plugin: runInBackground, worker } = require('mongoose-kue');
 
-
-/* define schema */
-const UserSchema = new Schema({});
-
-User.statics.sendEmail = function sendEmail(options, done) {
-  done(null, options);
-};
-
-User.methods.sendEmail = function (options, done) {
-  done(null, options);
-};
-
-/* apply mongoose-kue plugin */
-UserSchema.plugin(runInBackground);
-
-/* register model */
-const User = mongoose.model('User', UserSchema);
-
 ...
+
 
 /* ensure mongoose connection */
 mongoose.connect(`<url>`);
