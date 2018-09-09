@@ -77,6 +77,7 @@ const { plugin: runInBackground } = require('mongoose-kue');
 mongoose.plugin(runInBackground, {
   name: 'mongoose',
   prefix: 'q',
+  MONGODB_URI: process.env.MONGODB_URI,
   redis: (process.env.REDIS_URL || {
     port: 1234,
     host: '10.0.50.20',
@@ -90,9 +91,10 @@ mongoose.plugin(runInBackground, {
 ```
 
 - `name` - Name of the worker queue to process background work,
+- `MONGODB_URI` - [Valid mongodb uri](https://mongoosejs.com/docs/index.html),
 - `attempts` - [Failure Attempts](https://github.com/Automattic/kue#failure-attempts)
 - `backoff` - [Failure Backoff](https://github.com/Automattic/kue#failure-backoff)
-- All applicable [kue](https://github.com/Automattic/kue#redis-connection-settings) connection settngs
+- All applicable [kue](https://github.com/Automattic/kue#redis-connection-settings) connection settings
 
 
 ### Worker
@@ -125,10 +127,11 @@ worker.start({
 });
 ``` 
 
-- `name` - Name of the worker queue to process background work
-- `concurrency` - [Processing Concurrency](https://github.com/Automattic/kue#processing-concurrency). Default to 10
-- `timeout` - [Graceful shutdown delay](https://github.com/Automattic/kue#graceful-shutdown)
-- All applicable [kue](https://github.com/Automattic/kue#redis-connection-settings) connection settngs
+- `name` - Name of the worker queue to process background work,
+- `MONGODB_URI` - [Valid mongodb uri](https://mongoosejs.com/docs/index.html),
+- `concurrency` - [Processing Concurrency](https://github.com/Automattic/kue#processing-concurrency). Default to 10,
+- `timeout` - [Graceful shutdown delay](https://github.com/Automattic/kue#graceful-shutdown),
+- All applicable [kue](https://github.com/Automattic/kue#redis-connection-settings) connection settings
 
 
 ## References
