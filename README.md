@@ -26,7 +26,6 @@ const { plugin: runInBackground, worker } = require('mongoose-kue');
 
 ...
 
-
 /* queue sendEmail instance method to run in background */
 const job =
   user.runInBackground({ method: 'sendSMS', to: ['255714000111'] });
