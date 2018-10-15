@@ -1,6 +1,6 @@
 {
   "name": "mongoose-kue",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "mongoose plugin to run mongoose schema methods in background",
   "keywords": [
     "lykmapipo",
@@ -40,20 +40,24 @@
     }
   ],
   "devDependencies": {
+    "@lykmapipo/env": "^0.3.1",
     "async": "^2.6.1",
-    "chai": "^4.1.2",
+    "chai": "^4.2.0",
     "faker": "^4.1.0",
     "grunt": "^1.0.3",
-    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-jshint": "^2.0.0",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-mocha-test": "^0.13.3",
     "jshint-stylish": "^2.2.1",
     "kue": "^0.11.6",
     "mocha": "^5.2.0",
-    "mongoose": "^5.2.13"
+    "mongoose": "^5.3.3"
   },
-  "dependencies": {
-    "@lykmapipo/env": "^0.2.1",
-    "lodash": "^4.17.10"
+  "peerDependencies": {
+    "@lykmapipo/env": "^0.3.1",
+    "async": "^2.6.1",
+    "kue": "^0.11.6",
+    "lodash": "^4.17.10",
+    "mongoose": "^5.3.3"
   }
 }
