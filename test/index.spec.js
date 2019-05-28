@@ -1,169 +1,129 @@
 'use strict';
 
-
 /* dependencies */
-const path = require('path');
-const expect = require('chai').expect;
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-const { plugin, worker } = require(path.join(__dirname, '..', 'index'));
+const {
+  expect,
+  clear,
+  createTestModel
+} = require('@lykmapipo/mongoose-test-helpers');
+const { plugin, worker } = require('../index');
 let Party;
 
 /* @todo sinon spy */
 
+describe('imports', () => {
+  // before(done => worker.clear(done));
+  before(done => worker.reset(done));
 
-describe('mongoose-kue', function () {
-
-  before(function (done) {
-    worker.reset(done);
+  it('should be able to import schema plugin', () => {
+    expect(plugin).to.exist;
+    expect(plugin).to.be.a('function');
+    expect(plugin.length).to.be.equal(2);
   });
 
-  before(function () {
+  it('should be able to import worker', () => {
+    expect(worker).to.exist;
+    expect(worker).to.be.an('object');
+  });
 
-    let PartySchema = new Schema({});
+  // after(done => worker.clear(done));
+  after(done => worker.stop(done));
+});
 
-    PartySchema.statics.sendEmail = function (options, done) {
-      done(null, options);
+describe.skip('static runInBackground', () => {
+
+  before(done => worker.reset(done));
+
+  before(() => {
+    Party = createTestModel({}, schema => {
+      schema.statics.sendEmail = (optns, done) => done(null,
+        optns);
+      schema.statics.sendDirectEmail = done => done();
+      schema.methods.sendEmail = (optns, done) => done(null,
+        optns);
+      schema.methods.sendDirectEmail = done => done();
+    }, plugin);
+  });
+
+  it('should be able to queue and run function in background',
+    done => {
+
+      const options = {
+        method: 'sendEmail',
+        to: ['a@ex.com']
+      };
+
+      //listen to queue events
+      worker.queue.on('job complete', function (id, result) {
+        expect(id).to.exist;
+        expect(result).to.exist;
+        expect(result.to).to.exist;
+        expect(result.to).to.be.eql(options.to);
+        // done();
+      }).on('job remove', function (jobId, jobType) {
+        expect(jobId).to.exist;
+        expect(jobType).to.exist;
+        console.log('job removed');
+        done();
+      }).on('job failed', function (error) {
+        console.log('job failed');
+        done(new Error(error));
+      });
+
+      const job = Party.runInBackground(options);
+      expect(job).to.exist;
+
+    });
+
+  after(done => worker.stop(done));
+  after(done => clear(done));
+});
+
+describe.skip('instance runInBackground', () => {
+
+  let party;
+
+  before(done => worker.reset(done));
+
+  before(() => {
+    Party = createTestModel({}, schema => {
+      schema.statics.sendEmail = (optns, done) => done(null,
+        optns);
+      schema.statics.sendDirectEmail = done => done();
+      schema.methods.sendEmail = (optns, done) => done(null,
+        optns);
+      schema.methods.sendDirectEmail = done => done();
+    }, plugin);
+  });
+
+  before(done => {
+    Party.create({}, function (error, created) {
+      party = created;
+      done(error, created);
+    });
+  });
+
+  it('should be able to queue and run function in background', done => {
+    const options = {
+      method: 'sendEmail',
+      to: ['a@ex.com']
     };
 
-    PartySchema.statics.sendDirectEmail = function (done) {
+    //listen to queue events
+    worker.queue.on('job complete', function (id, result) {
+      expect(id).to.exist;
+      expect(result).to.exist;
+      expect(result.to).to.exist;
+      expect(result.to).to.be.eql(options.to);
       done();
-    };
+    }).on('job failed', function (error) {
+      done(new Error(error));
+    });
 
-    PartySchema.methods.sendEmail = function (options, done) {
-      done(null, options);
-    };
-
-    PartySchema.methods.sendDirectEmail = function (done) {
-      done();
-    };
-
-    PartySchema.plugin(plugin);
-
-    Party = mongoose.model('Party', PartySchema);
-
+    const job = party.runInBackground(options);
+    expect(job).to.exist;
   });
 
-
-  describe('import/require', function () {
-
-    it('should be able to import schema plugin', function () {
-      expect(plugin).to.exist;
-      expect(plugin).to.be.a('function');
-      expect(plugin.length).to.be.equal(2);
-    });
-
-    it('should be able to import worker', function () {
-      expect(worker).to.exist;
-      expect(worker).to.be.an('object');
-    });
-
-  });
-
-  describe('static#runInBackground', function () {
-
-    before(function (done) {
-      worker.reset(done);
-    });
-
-    before(function () {
-      worker.start();
-    });
-
-    it('should be able to queue and run function in background',
-      function (done) {
-
-        const options = {
-          method: 'sendEmail',
-          to: ['a@ex.com']
-        };
-
-        //listen to queue events
-        worker.queue.on('job complete', function (id, result) {
-          expect(id).to.exist;
-          expect(result).to.exist;
-          expect(result.to).to.exist;
-          expect(result.to).to.be.eql(options.to);
-          // done();
-        }).on('job remove', function (jobId, jobType) {
-          expect(jobId).to.exist;
-          expect(jobType).to.exist;
-          console.log('job removed');
-          done();
-        }).on('job failed', function (error) {
-          console.log('job failed');
-          done(new Error(error));
-        });
-
-        const job = Party.runInBackground(options);
-        expect(job).to.exist;
-
-      });
-
-    after(function (done) {
-      worker.stop(done);
-    });
-
-  });
-
-
-  describe('instance#runInBackground', function () {
-
-    let party;
-
-    before(function (done) {
-      worker.reset(done);
-    });
-
-    before(function () {
-      worker.start();
-    });
-
-    before(function (done) {
-
-      Party.create({}, function (error, created) {
-        party = created;
-        done(error, created);
-      });
-
-    });
-
-    it('should be able to queue and run function in background',
-      function (done) {
-
-        const options = {
-          method: 'sendEmail',
-          to: ['a@ex.com']
-        };
-
-        //listen to queue events
-        worker.queue.on('job complete', function (id, result) {
-          expect(id).to.exist;
-          expect(result).to.exist;
-          expect(result.to).to.exist;
-          expect(result.to).to.be.eql(options.to);
-          done();
-        }).on('job failed', function (error) {
-          done(new Error(error));
-        });
-
-        const job = party.runInBackground(options);
-        expect(job).to.exist;
-
-      });
-
-    after(function (done) {
-      worker.stop(done);
-    });
-
-  });
-
-  after(function (done) {
-    worker.stop(done);
-  });
-
-  after(function (done) {
-    Party.deleteMany(done);
-  });
-
+  after(done => worker.stop(done));
+  after(done => clear(done));
 });

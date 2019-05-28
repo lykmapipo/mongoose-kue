@@ -12,7 +12,7 @@ let User;
 
 /* @todo sinon spy */
 
-describe.only('plugin', () => {
+describe('plugin', () => {
   // before(done => worker.clear(done));
   before(done => worker.reset(done));
 

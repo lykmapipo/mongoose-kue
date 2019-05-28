@@ -10,7 +10,7 @@ const worker = require('../lib/worker');
 
 /* @todo sinon spy */
 
-describe.only('worker import', () => {
+describe('worker import', () => {
   // before(done => worker.clear(done));
   before(done => worker.reset(done));
 
@@ -25,7 +25,7 @@ describe.only('worker import', () => {
   after(done => worker.stop(done));
 });
 
-describe.only('worker initialization', () => {
+describe('worker initialization', () => {
   // before(done => worker.clear(done));
   before(done => worker.reset(done));
 
@@ -46,7 +46,7 @@ describe.only('worker initialization', () => {
 });
 
 
-describe.only('worker process', () => {
+describe('worker process', () => {
   let user;
   const User = createTestModel({}, schema => {
     schema.statics.sendEmail = (optns, done) => done(null, optns);
