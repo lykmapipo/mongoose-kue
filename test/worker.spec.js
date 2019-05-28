@@ -11,7 +11,7 @@ let User;
 
 /* @todo sinon spy */
 
-describe('mongoose-kue-worker', function () {
+describe.only('mongoose-kue-worker', function () {
 
   before(function () {
 

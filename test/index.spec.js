@@ -88,8 +88,10 @@ describe('mongoose-kue', function () {
         }).on('job remove', function (jobId, jobType) {
           expect(jobId).to.exist;
           expect(jobType).to.exist;
+          console.log('job removed');
           done();
         }).on('job failed', function (error) {
+          console.log('job failed');
           done(new Error(error));
         });
 
