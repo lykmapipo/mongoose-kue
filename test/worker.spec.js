@@ -11,9 +11,9 @@ let User;
 
 /* @todo sinon spy */
 
-describe.only('mongoose-kue-worker', function () {
+describe.only('mongoose-kue-worker', () => {
 
-  before(function () {
+  before(() => {
 
     let UserSchema = new Schema({});
 
@@ -37,13 +37,11 @@ describe.only('mongoose-kue-worker', function () {
 
   });
 
-  describe('import', function () {
+  describe('import', () => {
 
-    before(function (done) {
-      worker.reset(done);
-    });
+    before(done => worker.reset(done));
 
-    it('should be imported without initialized', function () {
+    it('should be imported without initialized', () => {
 
       expect(worker).to.exist;
       expect(worker.defaults).to.exist;
@@ -52,19 +50,15 @@ describe.only('mongoose-kue-worker', function () {
 
     });
 
-    after(function (done) {
-      worker.stop(done);
-    });
+    after(done => worker.stop(done));
 
   });
 
-  describe('initialization', function () {
+  describe('initialization', () => {
 
-    before(function (done) {
-      worker.reset(done);
-    });
+    before(done => worker.reset(done));
 
-    it('should be able to initialize', function () {
+    it('should be able to initialize', () => {
       expect(worker.queue).to.not.exist;
 
       const options = { name: 'mongoose', timeout: 4000 };
@@ -77,20 +71,16 @@ describe.only('mongoose-kue-worker', function () {
 
     });
 
-    after(function (done) {
-      worker.stop(done);
-    });
+    after(done => worker.stop(done));
 
   });
 
 
-  describe('process', function () {
+  describe('process', () => {
 
     let user;
 
-    before(function (done) {
-      worker.reset(done);
-    });
+    before(done => worker.reset(done));
 
     before(function (done) {
       User.create({}, function (error, created) {
@@ -99,7 +89,7 @@ describe.only('mongoose-kue-worker', function () {
       });
     });
 
-    it('should be able to process method', function () {
+    it('should be able to process method', () => {
 
       expect(worker.process).to.exist;
       expect(worker.process).to.be.a('function');
@@ -266,9 +256,7 @@ describe.only('mongoose-kue-worker', function () {
 
       });
 
-    after(function (done) {
-      worker.stop(done);
-    });
+    after(done => worker.stop(done));
 
     after(function (done) {
       User.deleteMany(done);
