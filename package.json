@@ -40,6 +40,7 @@
     }
   ],
   "devDependencies": {
+    "@lykmapipo/mongoose-test-helpers": "^0.7.3",
     "chai": "^4.2.0",
     "faker": "^4.1.0",
     "grunt": "^1.0.4",
@@ -55,6 +56,8 @@
   },
   "dependencies": {
     "@lykmapipo/env": ">=0.7.7",
+    "@lykmapipo/kue-common": ">=0.3.0",
+    "@lykmapipo/mongoose-common": ">=0.23.1",
     "async": ">=3.0.1",
     "kue": ">=0.11.6",
     "lodash": ">=4.17.11"

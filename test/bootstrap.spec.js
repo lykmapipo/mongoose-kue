@@ -1,62 +1,17 @@
 'use strict';
 
-
-/* set environment to test */
-process.env.NODE_ENV = 'test';
-
-
 /* dependencies */
-const async = require('async');
-const kue = require('kue');
-const mongoose = require('mongoose');
-mongoose.Promise = global.Promise;
+const { connect, clear, drop } = require('@lykmapipo/mongoose-test-helpers');
+const { clear: clean } = require('@lykmapipo/kue-common');
 
-// mongoose.set('debug', true);
+/* clear queue test database */
+before(done => clean(done));
 
-/* setup redis connection */
-const redis = kue.redis.createClientFactory({
-  redis: {}
-});
+/* setup mongo test database */
+before(done => connect(done));
 
+/* clear mongo test database */
+before(done => clear(done));
 
-/* clear redis database */
-function cleanup(done) {
-  redis
-    .keys('q*', function (error, rows) {
-      if (error) {
-        done(error);
-      } else {
-        async.each(rows, function (row, next) {
-          redis.del(row, next);
-        }, done);
-      }
-    });
-}
-
-
-/* clear mongodb database */
-function wipe(done) {
-  if (mongoose.connection && mongoose.connection.dropDatabase) {
-    mongoose.connection.dropDatabase(done);
-  } else {
-    done();
-  }
-}
-
-
-/* setup mongoose connection */
-before(function (done) {
-  mongoose.connect('mongodb://localhost/mongoose-kue', done);
-});
-
-/* clear redis */
-before(cleanup);
-
-/* clear mongodb */
-before(wipe);
-
-/* clear mongodb */
-after(wipe);
-
-/* clear redis */
-after(cleanup);
+/* drop mongo test database */
+after(done => drop(done));
