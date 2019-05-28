@@ -53,7 +53,7 @@ describe.only('worker process', () => {
 
   before(done => worker.reset(done));
 
-  before(done => {
+  beforeEach(done => {
     User.create({}, (error, created) => {
       user = created;
       done(error, created);
@@ -67,7 +67,6 @@ describe.only('worker process', () => {
   });
 
   it('should throw Missing Model Name', done => {
-    //inject job 
     const job = { data: { context: {} } };
 
     worker.process(job, error => {
@@ -78,7 +77,6 @@ describe.only('worker process', () => {
   });
 
   it('should throw Missing Method Name', done => {
-    //inject job
     const job = {
       data: { context: { model: User.modelName } }
     };
@@ -91,7 +89,6 @@ describe.only('worker process', () => {
   });
 
   it('should throw Missing Model', done => {
-    //inject job 
     const job = {
       data: { context: { model: 'Use', method: 'sendEmail' } }
     };
@@ -105,7 +102,6 @@ describe.only('worker process', () => {
   });
 
   it('should throw Missing Schema Static Method', done => {
-    //inject job
     const job = {
       data: { context: { model: User.modelName, method: 'sentEmail' } }
     };
@@ -119,7 +115,6 @@ describe.only('worker process', () => {
   });
 
   it('should be able run static method with arguments', done => {
-    //inject job
     const job = {
       data: {
         context: { model: User.modelName, method: 'sendEmail' },
@@ -138,7 +133,6 @@ describe.only('worker process', () => {
   });
 
   it('should be able run static method with no arguments', done => {
-    //inject job
     const job = {
       data: {
         context: { model: User.modelName, method: 'sendDirectEmail' }
@@ -153,7 +147,6 @@ describe.only('worker process', () => {
   });
 
   it('should throw Missing Model Instance', done => {
-    //inject job 
     const job = {
       data: {
         context: {
@@ -176,7 +169,6 @@ describe.only('worker process', () => {
   });
 
   it('should be able run instance method with arguments', done => {
-    //inject job
     const job = {
       data: {
         context: {
@@ -199,7 +191,6 @@ describe.only('worker process', () => {
   });
 
   it('should be able run instance method with no arguments', done => {
-    //inject job
     const job = {
       data: {
         context: {
