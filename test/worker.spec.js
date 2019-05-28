@@ -1,267 +1,223 @@
 'use strict';
 
-
 /* dependencies */
-const path = require('path');
-const expect = require('chai').expect;
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-const worker = require(path.join(__dirname, '..', 'lib', 'worker'));
-let User;
+const {
+  expect,
+  clear,
+  createTestModel
+} = require('@lykmapipo/mongoose-test-helpers');
+const worker = require('../lib/worker');
 
 /* @todo sinon spy */
 
-describe.only('mongoose-kue-worker', () => {
+describe.only('worker import', () => {
+  before(done => worker.reset(done));
 
-  before(() => {
+  it('should be imported without initialized', () => {
+    expect(worker).to.exist;
+    expect(worker.defaults).to.exist;
+    expect(worker.options).to.be.eql(worker.defaults);
+    expect(worker.queue).to.not.exist;
+  });
 
-    let UserSchema = new Schema({});
+  after(done => worker.stop(done));
+});
 
-    UserSchema.statics.sendEmail = function (options, done) {
-      done(null, options);
-    };
+describe.only('worker initialization', () => {
+  before(done => worker.reset(done));
 
-    UserSchema.statics.sendDirectEmail = function (done) {
+  it('should be able to initialize', () => {
+    expect(worker.queue).to.not.exist;
+
+    const options = { name: 'mongoose', timeout: 4000 };
+    worker.init(options);
+
+    expect(worker.options).to.exist;
+    expect(worker.options.name).to.be.equal(options.name);
+    expect(worker.options.timeout).to.be.equal(options.timeout);
+    expect(worker.queue).to.exist;
+  });
+
+  after(done => worker.stop(done));
+});
+
+
+describe.only('worker process', () => {
+  let user;
+  const User = createTestModel({}, schema => {
+    schema.statics.sendEmail = (options, done) => done(null, options);
+    schema.statics.sendDirectEmail = done => done();
+    schema.methods.sendEmail = (options, done) => done(null, options);
+    schema.methods.sendDirectEmail = done => done();
+  });
+
+  before(done => worker.reset(done));
+
+  before(done => {
+    User.create({}, (error, created) => {
+      user = created;
+      done(error, created);
+    });
+  });
+
+  it('should be able to process method', () => {
+    expect(worker.process).to.exist;
+    expect(worker.process).to.be.a('function');
+    expect(worker.process.length).to.be.equal(2);
+  });
+
+  it('should throw Missing Model Name', done => {
+    //inject job 
+    const job = { data: { context: {} } };
+
+    worker.process(job, error => {
+      expect(error).to.exist;
+      expect(error.message).to.equal('Missing Model Name');
       done();
+    });
+  });
+
+  it('should throw Missing Method Name', done => {
+    //inject job
+    const job = {
+      data: { context: { model: User.modelName } }
     };
 
-    UserSchema.methods.sendEmail = function (options, done) {
-      done(null, options);
-    };
-
-    UserSchema.methods.sendDirectEmail = function (done) {
+    worker.process(job, error => {
+      expect(error).to.exist;
+      expect(error.message).to.equal('Missing Method Name');
       done();
+    });
+  });
+
+  it('should throw Missing Model', done => {
+    //inject job 
+    const job = {
+      data: { context: { model: 'Use', method: 'sendEmail' } }
     };
 
-    User = mongoose.model('User', UserSchema);
-
+    worker.process(job, error => {
+      expect(error).to.exist;
+      expect(error.message)
+        .to.contain('Missing Model Use');
+      done();
+    });
   });
 
-  describe('import', () => {
+  it('should throw Missing Schema Static Method', done => {
+    //inject job
+    const job = {
+      data: { context: { model: User.modelName, method: 'sentEmail' } }
+    };
 
-    before(done => worker.reset(done));
-
-    it('should be imported without initialized', () => {
-
-      expect(worker).to.exist;
-      expect(worker.defaults).to.exist;
-      expect(worker.options).to.be.eql(worker.defaults);
-      expect(worker.queue).to.not.exist;
-
+    worker.process(job, error => {
+      expect(error).to.exist;
+      expect(error.message)
+        .to.contain('Missing Schema Static Method sentEmail');
+      done();
     });
-
-    after(done => worker.stop(done));
-
   });
 
-  describe('initialization', () => {
+  it('should be able run static method with arguments', done => {
+    //inject job
+    const job = {
+      data: {
+        context: { model: User.modelName, method: 'sendEmail' },
+        to: ['a@ex.com']
+      }
+    };
 
-    before(done => worker.reset(done));
-
-    it('should be able to initialize', () => {
-      expect(worker.queue).to.not.exist;
-
-      const options = { name: 'mongoose', timeout: 4000 };
-      worker.init(options);
-
-      expect(worker.options).to.exist;
-      expect(worker.options.name).to.be.equal(options.name);
-      expect(worker.options.timeout).to.be.equal(options.timeout);
-      expect(worker.queue).to.exist;
-
+    worker.process(job, (error, results) => {
+      expect(error).to.not.exist;
+      expect(results).to.exist;
+      expect(results.context).to.not.exist;
+      expect(results.to).to.exist;
+      expect(results.to).to.be.eql(job.data.to);
+      done(error, results);
     });
-
-    after(done => worker.stop(done));
-
   });
 
+  it('should be able run static method with no arguments', done => {
+    //inject job
+    const job = {
+      data: {
+        context: { model: User.modelName, method: 'sendDirectEmail' }
+      }
+    };
 
-  describe('process', () => {
-
-    let user;
-
-    before(done => worker.reset(done));
-
-    before(function (done) {
-      User.create({}, function (error, created) {
-        user = created;
-        done(error, created);
-      });
+    worker.process(job, (error, results) => {
+      expect(error).to.not.exist;
+      expect(results).to.not.exist;
+      done(error, results);
     });
+  });
 
-    it('should be able to process method', () => {
-
-      expect(worker.process).to.exist;
-      expect(worker.process).to.be.a('function');
-      expect(worker.process.length).to.be.equal(2);
-
-    });
-
-
-    it('should throw Missing Model Name', function (done) {
-      //inject job 
-      const job = { data: { context: {} } };
-
-      worker.process(job, function (error) {
-        expect(error).to.exist;
-        expect(error.message).to.equal('Missing Model Name');
-        done();
-      });
-
-    });
-
-    it('should throw Missing Method Name', function (done) {
-      //inject job
-      const job = { data: { context: { model: 'User' } } };
-
-      worker.process(job, function (error) {
-        expect(error).to.exist;
-        expect(error.message).to.equal('Missing Method Name');
-        done();
-      });
-
-    });
-
-    it('should throw Missing Model', function (done) {
-      //inject job 
-      const job = { data: { context: { model: 'Use', method: 'sendEmail' } } };
-
-      worker.process(job, function (error) {
-        expect(error).to.exist;
-        expect(error.message)
-          .to.contain('Missing Model Use');
-        done();
-      });
-
-    });
-
-    it('should throw Missing Schema Static Method', function (done) {
-      //inject job
-      const job = { data: { context: { model: 'User', method: 'sentEmail' } } };
-
-      worker.process(job, function (error) {
-        expect(error).to.exist;
-        expect(error.message)
-          .to.contain('Missing Schema Static Method sentEmail');
-        done();
-      });
-
-    });
-
-    it('should be able run static method with arguments',
-      function (done) {
-        //inject job
-        const job = {
-          data: {
-            context: { model: 'User', method: 'sendEmail' },
-            to: ['a@ex.com']
-          }
-        };
-
-        worker.process(job, function (error, results) {
-          expect(error).to.not.exist;
-          expect(results).to.exist;
-          expect(results.context).to.not.exist;
-          expect(results.to).to.exist;
-          expect(results.to).to.be.eql(job.data.to);
-          done(error, results);
-        });
-
-      });
-
-    it('should be able run static method with no arguments',
-      function (done) {
-        //inject job
-        const job = {
-          data: {
-            context: { model: 'User', method: 'sendDirectEmail' }
-          }
-        };
-
-        worker.process(job, function (error, results) {
-          expect(error).to.not.exist;
-          expect(results).to.not.exist;
-          done(error, results);
-        });
-
-      });
-
-    it('should throw Missing Model Instance', function (done) {
-      //inject job 
-      const job = {
-        data: {
-          context: {
-            model: 'User',
-            method: 'sendEmail',
-            _id: '54108337212ffb6d459f854c'
-          }
+  it('should throw Missing Model Instance', done => {
+    //inject job 
+    const job = {
+      data: {
+        context: {
+          model: User.modelName,
+          method: 'sendEmail',
+          _id: '54108337212ffb6d459f854c'
         }
-      };
+      }
+    };
 
-      worker.process(job, function (error) {
-        expect(error).to.exist;
-        expect(error.message)
-          .to.contain('Missing ' + job.data.context.model +
-            ' Instance ' + job.data.context
-            ._id);
-        done();
-
-      });
+    worker.process(job, error => {
+      expect(error).to.exist;
+      expect(error.message)
+        .to.contain('Missing ' + job.data.context.model +
+          ' Instance ' + job.data.context
+          ._id);
+      done();
 
     });
-
-    it('should be able run instance method with arguments',
-      function (done) {
-        //inject job
-        const job = {
-          data: {
-            context: {
-              model: 'User',
-              method: 'sendEmail',
-              _id: user._id
-            },
-            to: ['a@ex.com']
-          }
-        };
-
-        worker.process(job, function (error, results) {
-          expect(error).to.not.exist;
-          expect(results).to.exist;
-          expect(results.context).to.not.exist;
-          expect(results.to).to.exist;
-          expect(results.to).to.be.eql(job.data.to);
-          done(error, results);
-        });
-
-      });
-
-    it('should be able run instance method with no arguments',
-      function (done) {
-        //inject job
-        const job = {
-          data: {
-            context: {
-              model: 'User',
-              method: 'sendDirectEmail',
-              _id: user._id
-            }
-          }
-        };
-
-        worker.process(job, function (error, results) {
-          expect(error).to.not.exist;
-          expect(results).to.not.exist;
-          done(error, results);
-        });
-
-      });
-
-    after(done => worker.stop(done));
-
-    after(function (done) {
-      User.deleteMany(done);
-    });
-
   });
 
+  it('should be able run instance method with arguments', done => {
+    //inject job
+    const job = {
+      data: {
+        context: {
+          model: User.modelName,
+          method: 'sendEmail',
+          _id: user._id
+        },
+        to: ['a@ex.com']
+      }
+    };
+
+    worker.process(job, (error, results) => {
+      expect(error).to.not.exist;
+      expect(results).to.exist;
+      expect(results.context).to.not.exist;
+      expect(results.to).to.exist;
+      expect(results.to).to.be.eql(job.data.to);
+      done(error, results);
+    });
+  });
+
+  it('should be able run instance method with no arguments', done => {
+    //inject job
+    const job = {
+      data: {
+        context: {
+          model: User.modelName,
+          method: 'sendDirectEmail',
+          _id: user._id
+        }
+      }
+    };
+
+    worker.process(job, (error, results) => {
+      expect(error).to.not.exist;
+      expect(results).to.not.exist;
+      done(error, results);
+    });
+  });
+
+  after(done => worker.stop(done));
+
+  after(done => clear(done));
 });
