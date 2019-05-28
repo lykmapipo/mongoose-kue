@@ -48,14 +48,14 @@
     "grunt-mocha-test": "^0.13.3",
     "jshint-stylish": "^2.2.1",
     "mocha": "^6.1.4",
-    "mongoose": ">=5.5.9"
+    "mongoose": ">=5.5.11"
   },
   "peerDependencies": {
-    "mongoose": ">=5.5.9"
+    "mongoose": ">=5.5.11"
   },
   "dependencies": {
     "@lykmapipo/env": ">=0.7.7",
-    "async": ">=3.0.0",
+    "async": ">=3.0.1",
     "kue": ">=0.11.6",
     "lodash": ">=4.17.11"
   }
