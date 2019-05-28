@@ -123,6 +123,7 @@ describe('instance runInBackground', () => {
     expect(job).to.exist;
   });
 
+  // after(done => worker.clear(done));
   after(done => worker.stop(done));
 
   after(done => clear(done));
