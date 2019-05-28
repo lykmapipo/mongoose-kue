@@ -15,7 +15,7 @@ const worker = require('../lib/worker');
 describe('plugin', () => {
   let User;
 
-  // before(done => worker.clear(done));
+  before(done => worker.clear(done));
   before(done => worker.reset(done));
 
   before(() => {
@@ -64,8 +64,7 @@ describe('plugin', () => {
     expect(job.data.context.method).to.be.equal('sendEmail');
   });
 
-  // after(done => worker.clear(done));
+  after(done => worker.clear(done));
   after(done => worker.stop(done));
-
   after(done => clear(done));
 });

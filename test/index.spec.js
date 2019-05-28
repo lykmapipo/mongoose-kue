@@ -12,7 +12,7 @@ const { plugin, worker } = require('../index');
 /* @todo sinon spy */
 
 describe('imports', () => {
-  // before(done => worker.clear(done));
+  before(done => worker.clear(done));
   before(done => worker.reset(done));
 
   it('should be able to import schema plugin', () => {
@@ -26,16 +26,15 @@ describe('imports', () => {
     expect(worker).to.be.an('object');
   });
 
-  // after(done => worker.clear(done));
+  after(done => worker.clear(done));
   after(done => worker.stop(done));
 });
 
 describe('static runInBackground', () => {
   let User;
 
-  // before(done => worker.clear(done));
+  before(done => worker.clear(done));
   before(done => worker.reset(done));
-
   before(() => worker.start());
 
   before(() => {
@@ -70,7 +69,7 @@ describe('static runInBackground', () => {
     expect(job).to.exist;
   });
 
-  // after(done => worker.clear(done));
+  after(done => worker.clear(done));
   after(done => worker.stop(done));
   after(done => clear(done));
 });
@@ -79,9 +78,8 @@ describe('instance runInBackground', () => {
   let User;
   let user;
 
-  // before(done => worker.clear(done));
+  before(done => worker.clear(done));
   before(done => worker.reset(done));
-
   before(() => worker.start());
 
   before(() => {
@@ -123,8 +121,7 @@ describe('instance runInBackground', () => {
     expect(job).to.exist;
   });
 
-  // after(done => worker.clear(done));
+  after(done => worker.clear(done));
   after(done => worker.stop(done));
-
   after(done => clear(done));
 });

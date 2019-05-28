@@ -11,7 +11,7 @@ const worker = require('../lib/worker');
 /* @todo sinon spy */
 
 describe('worker import', () => {
-  // before(done => worker.clear(done));
+  before(done => worker.clear(done));
   before(done => worker.reset(done));
 
   it('should be imported without initialized', () => {
@@ -21,12 +21,12 @@ describe('worker import', () => {
     expect(worker.queue).to.not.exist;
   });
 
-  // after(done => worker.clear(done));
+  after(done => worker.clear(done));
   after(done => worker.stop(done));
 });
 
 describe('worker initialization', () => {
-  // before(done => worker.clear(done));
+  before(done => worker.clear(done));
   before(done => worker.reset(done));
 
   it('should be able to initialize', () => {
@@ -41,21 +41,25 @@ describe('worker initialization', () => {
     expect(worker.queue).to.exist;
   });
 
-  // after(done => worker.clear(done));
+  after(done => worker.clear(done));
   after(done => worker.stop(done));
 });
 
 
 describe('worker process', () => {
+  let User;
   let user;
-  const User = createTestModel({}, schema => {
-    schema.statics.sendEmail = (optns, done) => done(null, optns);
-    schema.statics.sendDirectEmail = done => done();
-    schema.methods.sendEmail = (optns, done) => done(null, optns);
-    schema.methods.sendDirectEmail = done => done();
+
+  before(() => {
+    User = createTestModel({}, schema => {
+      schema.statics.sendEmail = (optns, done) => done(null, optns);
+      schema.statics.sendDirectEmail = done => done();
+      schema.methods.sendEmail = (optns, done) => done(null, optns);
+      schema.methods.sendDirectEmail = done => done();
+    });
   });
 
-  // before(done => worker.clear(done));
+  before(done => worker.clear(done));
   before(done => worker.reset(done));
 
   beforeEach(done => {
@@ -213,8 +217,7 @@ describe('worker process', () => {
     });
   });
 
-  // after(done => worker.clear(done));
+  after(done => worker.clear(done));
   after(done => worker.stop(done));
-
   after(done => clear(done));
 });
