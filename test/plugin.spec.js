@@ -4,15 +4,17 @@
 /* dependencies */
 const {
   expect,
+  clear,
   createTestModel
 } = require('@lykmapipo/mongoose-test-helpers');
 const plugin = require('../lib/plugin');
 const worker = require('../lib/worker');
-let User;
 
 /* @todo sinon spy */
 
 describe('plugin', () => {
+  let User;
+
   // before(done => worker.clear(done));
   before(done => worker.reset(done));
 
@@ -29,7 +31,7 @@ describe('plugin', () => {
     // assert static
     expect(User.runInBackground).to.exist;
 
-    //assert instance
+    // assert instance
     const user = new User({});
     expect(user.runInBackground).to.exist;
   });
@@ -64,4 +66,6 @@ describe('plugin', () => {
 
   // after(done => worker.clear(done));
   after(done => worker.stop(done));
+
+  after(done => clear(done));
 });
