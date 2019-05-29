@@ -15,3 +15,6 @@ before(done => clear(done));
 
 /* drop mongo test database */
 after(done => drop(done));
+
+/* clear queue test database */
+after(done => clean(done));

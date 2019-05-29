@@ -109,6 +109,23 @@ worker.start({
 - `timeout` - [Graceful shutdown delay](https://github.com/Automattic/kue#graceful-shutdown),
 - All applicable [kue](https://github.com/Automattic/kue#redis-connection-settings) connection settings
 
+## Environment
+```js
+KUE_NAME=mongoose
+KUE_JOB_TYPES=mongoose
+KUE_TIMEOUT=5000
+KUE_CONCURRENCY=10
+KUE_MAX_ATTEMPTS=3
+KUE_PRIORITY=normal
+KUE_JOB_EVENTS=false
+KUE_REMOVE_ON_COMPLETE=true
+KUE_REDIS_URL=redis://127.0.0.1:3000
+KUE_HTTP_PORT=5000
+KUE_HTTP_USERNAME=kue
+KUE_HTTP_PASSWORD=kue
+REDIS_URL=redis://127.0.0.1:3000
+```
+
 
 ## References
 - [mongoose](http://mongoosejs.com/docs/guide.html)
