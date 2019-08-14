@@ -40,7 +40,7 @@
     }
   ],
   "devDependencies": {
-    "@lykmapipo/mongoose-test-helpers": "^0.7.15",
+    "@lykmapipo/mongoose-test-helpers": "^0.7.17",
     "chai": "^4.2.0",
     "extend": "^3.0.2",
     "faker": "^4.1.0",
@@ -50,20 +50,20 @@
     "grunt-mocha-test": "^0.13.3",
     "handlebars": "^4.1.2",
     "jshint-stylish": "^2.2.1",
-    "mocha": "^6.1.4",
-    "mongoose": ">=5.6.4",
+    "mocha": "^6.2.0",
+    "mongoose": ">=5.6.9",
     "shelljs": "^0.8.3"
   },
   "peerDependencies": {
-    "mongoose": ">=5.6.4"
+    "mongoose": ">=5.6.9"
   },
   "dependencies": {
-    "@lykmapipo/common": ">=0.22.3",
-    "@lykmapipo/env": ">=0.9.5",
-    "@lykmapipo/kue-common": ">=0.3.7",
-    "@lykmapipo/mongoose-common": ">=0.25.8",
+    "@lykmapipo/common": ">=0.25.1",
+    "@lykmapipo/env": ">=0.12.1",
+    "@lykmapipo/kue-common": ">=0.3.8",
+    "@lykmapipo/mongoose-common": ">=0.25.10",
     "async": ">=3.1.0",
     "kue": ">=0.11.6",
-    "lodash": ">=4.17.11"
+    "lodash": ">=4.17.15"
   }
 }
