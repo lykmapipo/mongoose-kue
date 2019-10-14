@@ -9,6 +9,9 @@ const {
 } = require('@lykmapipo/kue-common');
 const { worker } = require('../index');
 
+// import models
+require('./models');
+
 // start worker queue
 worker.start();
 
