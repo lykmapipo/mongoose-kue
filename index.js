@@ -27,9 +27,8 @@
 
 
 /* dependencies */
-const path = require('path');
-const plugin = require(path.join(__dirname, 'lib', 'plugin'));
-const worker = require(path.join(__dirname, 'lib', 'worker'));
+const plugin = require('./lib/plugin');
+const worker = require('./lib/worker');
 
 
 /**
