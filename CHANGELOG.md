@@ -1,3 +1,31 @@
+#### 0.9.0 (2019-10-14)
+
+##### Chores
+
+* **examples:**
+  *  improve usage example ([89e590a1](https://github.com/lykmapipo/mongoose-kue/commit/89e590a1769f85cf5e46de6d701fadaeb0e630b5))
+  *  setup main and worker samples ([8c7a817c](https://github.com/lykmapipo/mongoose-kue/commit/8c7a817c3cc63029baa42db68608cdcde9606768))
+* **deps:**
+  *  force latest versions ([ee21453f](https://github.com/lykmapipo/mongoose-kue/commit/ee21453f10ea44a3dc861c19c1ef4a0b58fa0f18))
+  *  force latest version & audit fix ([21a2073c](https://github.com/lykmapipo/mongoose-kue/commit/21a2073cfce2a9764e24651ddd9c652936e1d8fe))
+
+##### Documentation Changes
+
+* **changelog:**  generate latest release notes ([e48d4400](https://github.com/lykmapipo/mongoose-kue/commit/e48d4400fbf30d6bf7321a89e585752c7fa0ca6d))
+
+##### New Features
+
+*  allow run defined jobs ([f0d60319](https://github.com/lykmapipo/mongoose-kue/commit/f0d60319fb11d94bc04234d3e9cdd1b8655f24b6))
+
+##### Bug Fixes
+
+* **worker:**  ensure queue name on job creation ([96b9d691](https://github.com/lykmapipo/mongoose-kue/commit/96b9d6910c896137b803bb8045af3f4f44ea83eb))
+
+##### Refactors
+
+* **plugin:**  remove dangling underscore ([f09ca8b6](https://github.com/lykmapipo/mongoose-kue/commit/f09ca8b6f8b67b179fc17949697cca67be16b3ce))
+*  specify path on import ([2ba9a49d](https://github.com/lykmapipo/mongoose-kue/commit/2ba9a49da63175127c4f57c3a9ede02a23dc6602))
+
 #### 0.8.9 (2019-10-10)
 
 #### 0.8.8 (2019-09-28)
