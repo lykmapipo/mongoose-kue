@@ -1,6 +1,6 @@
 {
   "name": "mongoose-kue",
-  "version": "0.9.10",
+  "version": "0.9.11",
   "description": "mongoose plugin to run mongoose schema methods in background",
   "keywords": [
     "lykmapipo",
